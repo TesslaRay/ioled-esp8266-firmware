@@ -1,4 +1,9 @@
+# Mongoose OS
+build/
+deps/
+
+# Production scripts.
+scripts/
+
+# Misc
 .DS_Store
-build
-deps
-scripts

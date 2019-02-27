@@ -1,10 +1,12 @@
+// Libraries.
 load('api_config.js');
 load('api_gpio.js');
 load('api_timer.js');
 load('api_pwm.js');
-load('api_rpc.js');
 load('api_mqtt.js');
+// Modules.
 load('board.js');
+//load('neopixel.js');
 
 // Topic to send events.
 let eventTopic = '/devices/' + Cfg.get('device.id') + '/events';
@@ -17,7 +19,7 @@ let stateTopic = '/devices/' + Cfg.get('device.id') + '/state';
 init();
 
 // Set leds to output mode.
-//GPIO.set_mode(board.led1.pin, GPIO.MODE_OUTPUT);
+GPIO.set_mode(board.led1.pin, GPIO.MODE_OUTPUT);
 GPIO.set_mode(board.led2.pin, GPIO.MODE_OUTPUT);
 GPIO.set_mode(board.led3.pin, GPIO.MODE_OUTPUT);
 GPIO.set_mode(board.led4.pin, GPIO.MODE_OUTPUT);
@@ -49,16 +51,8 @@ GPIO.set_button_handler(board.btn1.pin, GPIO.PULL_UP, GPIO.INT_EDGE_NEG, 10, fun
  * --- {"board": {"led1":{"freq":20, "duty": 0.5, "state": true}, "led2":{"freq":20, "duty": 0.5, "state": true}}}
  */
 MQTT.sub(configTopic, function(conn, topic, msg) {
+  print('conn', conn);
   print('Topic:', topic, 'message:', msg);
   setBoardConfigV2(msg, applyBoardConfig);
 });
 
-/* Change the board values via RPC.
- * Dependency must be added - origin: https://github.com/mongoose-os-libs/rpc-uart to send RPC commands via usb.
- * Ex1: mos call board.update '{"led1": { "duty":0.5, "freq":20 }}'
- * Ex2: mos call board.update '{"btn1": { "control": "led1"}}'
- * args is an object. Message from MQTT is a string.
- */
-RPC.addHandler('board.update', function(args) {
-  return setBoardConfig(args);
-});

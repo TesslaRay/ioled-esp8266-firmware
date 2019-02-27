@@ -86,7 +86,7 @@ let ledPwmOff = function(ledName, turn) {
     // Only disabling the pin doesn't always turn it off. (case: onhi = false), so use GPIO.write.
     GPIO.write(led.pin, !led.onhi);
   }
-  print(ledName, 'state:', led.state ? 'blinking' : 'off');
+  print(ledName, 'state:', led.state ? 'true' : 'false');
 };
 
 /* Update board configuration file.
@@ -116,6 +116,7 @@ let setBoardConfig = function(json) {
  */
 let setBoardConfigV2 = function(msg, callback) {
   let brdObj = typeof(msg) === 'string' ? JSON.parse(msg) : msg;
+  print(brdObj);
   Cfg.set(brdObj);
   callback();
 };
@@ -141,7 +142,6 @@ let applyLedConfig = function(ledName) {
   led.freq = Cfg.get(brd + 'freq');
   led.state = Cfg.get(brd + 'state');
   normDuty(ledName);
-  print('entrando a PWM')
   ledPwmOff(ledName, false);
 };
 

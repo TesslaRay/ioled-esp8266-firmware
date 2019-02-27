@@ -12,33 +12,39 @@ config_schema:
   # Integrated led config
   - ["board.led1.duty", "d", 0.5, {title: "Integrated Led duty cycle"}]
   - ["board.led1.freq", "i", 50, {title: "Integrated Led frequency"}]
-  - ["board.led1.state", "b", false, {title: "Integrated Led current state"}]
+  - ["board.led1.state", "b", true, {title: "Integrated Led current state"}]
   # Prototype led2 config
   - ["board.led2.active_high", "b", false, {title: "True if LED is on when output is high (1)"}]
-  - ["board.led2.duty", "d", 0.0, {title: "Led duty cycle"}]
+  - ["board.led2.duty", "d", 1.0, {title: "Led duty cycle"}]
   - ["board.led2.freq", "i", 100, {title: "Led frequency"}]
   - ["board.led2.pin", "i", 4, {title: "Led pin for PWM"}]
-  - ["board.led2.state", "b", false, {title: "Led current state"}]
+  - ["board.led2.state", "b", true, {title: "Led current state"}]
   # Prototype led3 config
   - ["board.led3.active_high", "b", false, {title: "True if LED is on when output is high (1)"}]
-  - ["board.led3.duty", "d", 0.0, {title: "Led duty cycle"}]
+  - ["board.led3.duty", "d", 1.0, {title: "Led duty cycle"}]
   - ["board.led3.freq", "i", 100, {title: "Led frequency"}]
   - ["board.led3.pin", "i", 5, {title: "Led pin for PWM"}]
-  - ["board.led3.state", "b", false, {title: "Led current state"}]
+  - ["board.led3.state", "b", true, {title: "Led current state"}]
   # Prototype led4 config
   - ["board.led4.active_high", "b", false, {title: "True if LED is on when output is high (1)"}]
-  - ["board.led4.duty", "d", 0.0, {title: "Led duty cycle"}]
+  - ["board.led4.duty", "d", 1.0, {title: "Led duty cycle"}]
   - ["board.led4.freq", "i", 100, {title: "Led frequency"}]
   - ["board.led4.pin", "i", 14, {title: "Led pin for PWM"}]
-  - ["board.led4.state", "b", false, {title: "Led current state"}]
+  - ["board.led4.state", "b", true, {title: "Led current state"}]
    # Prototype led5 config
   - ["board.led5.active_high", "b", false, {title: "True if LED is on when output is high (1)"}]
-  - ["board.led5.duty", "d", 0.0, {title: "Led duty cycle"}]
+  - ["board.led5.duty", "d", 1.0, {title: "Led duty cycle"}]
   - ["board.led5.freq", "i", 100, {title: "Led frequency"}]
   - ["board.led5.pin", "i", 12, {title: "Led pin for PWM"}]
-  - ["board.led5.state", "b", false, {title: "Led current state"}]
-  # Disable access point
-  - ["wifi.ap.enable", "b", false, {title: "Disable Access Point"}]
+  - ["board.led5.state", "b", true, {title: "Led current state"}]
+  # Neopixel config
+  - ["board.neopixel.state", "b", true, {title: "Led current state"}]
+  - ["board.neopixel.pin", "i", 13, {title: "Neopixel pin"}]
+  - ["board.neopixel.pixels", "i", 3, {title: "Neopixel number of pixels"}]
+  # Enable access point
+  - ["wifi.ap.enable", "b", true, {title: "Disable Access Point"}]
+  - ["wifi.ap.ssid", "s", "esp8266.config", {title: "Access Point Name"}]
+  - ["wifi.ap.pass", "s", "", {title: "Access Point Password"}]
 
 tags:
   - js
@@ -57,6 +63,12 @@ libs:
   - origin: https://github.com/mongoose-os-libs/rpc-service-fs
   # gcp include mqtt and ca-bundle (certificates).
   - origin: https://github.com/mongoose-os-libs/gcp
-
+  # Access point for wifi
+  - origin: https://github.com/mongoose-os-libs/wifi-setup-web-ui
+  - origin: https://github.com/mongoose-os-libs/http-server
+  # Neopixel lib
+  - origin: https://github.com/mongoose-os-libs/neopixel
+  # DHT Humidity and temp sensors.
+  - origin: https://github.com/mongoose-os-libs/dht
 
 sources:
