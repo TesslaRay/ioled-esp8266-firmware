@@ -1,46 +1,87 @@
 load('api_neopixel.js');
-load('api_events.js')
+load('api_events.js');
 
-
-let pin = Cfg.get('board.neopixel.pin');
-let numPixels = Cfg.get('board.neopixel.pixels');
-let colorOrder = NeoPixel.GRB;
-let strip = NeoPixel.create(pin, numPixels, colorOrder);
-
-// True if is connected to GCP.
-let online = false;                              
+// The pixel index.
 let pixel = 0;
+// Get the neopixel pin (13)
+let pin = Cfg.get('board.neopixel.pin');
+// Get the number of pixels (3).
+let numPixels = Cfg.get('board.neopixel.pixels');
+// Create a and return a neoPixel strip object.
+let strip = NeoPixel.create(pin, numPixels, NeoPixel.GRB);
 
-let net_search = Timer.set(500, Timer.REPEAT, function() 
-{
-  print('net_search');
-  pixel = ++pixel% numPixels;
-  let r = 200, g = 35, b = 0;
-  strip.clear();
-  strip.setPixel(pixel, r, g, b);
-  strip.show();
-}, null);
+// RGB colors.
+let red = {r: 200, g: 0, b: 0};
+let green = {r: 0, g: 200, b: 0};
+let blue = {r: 0, g: 0, b: 200};
 
+/**
+ * Initialize the strip.
+ */
+let initStrip = function() {
+	strip.clear();
+	strip.setPixel(0, 0, 0, 0);
+	strip.setPixel(1, 0, 0, 0);
+	strip.setPixel(2, 0, 0, 0);
+	strip.show();
+};
 
+/**
+ *  Paint only one pixel of the strip.
+ * @param {number} pixel The pixel index.
+ * @param {{r: number, g: number, b: number}} color RGB color object.
+ */
+let setOnePixel = function(pixel, color) {
+	strip.clear();
+	for (let i = 0; i < numPixels; i++) {
+		pixel === i ? strip.setPixel(i, color.r, color.g, color.b) : strip.setPixel(i, 0, 0, 0);
+	}
+	strip.show();
+};
 
-Event.on(Event.CLOUD_DISCONNECTED, function()
-{
-  online = false;
-}, null);
+/**
+ * Paint all pixels on the stirp.
+ * @param {{r: number, g: number, b: number}} color RGB color object.
+ */
+let setAllPixels = function(color) {
+	strip.clear();
+	for (let i = 0; i < numPixels; i++) {
+		strip.setPixel(i, color.r, color.g, color.b);
+	}
+	strip.show();
+};
 
-Event.on(Event.CLOUD_CONNECTED, function() 
-{
-  online = true;
-  Timer.del(net_search);
-  let r = 0, g = 255, b = 0;
-  strip.clear();
-  strip.setPixel(0, r, g, b);
-  strip.setPixel(1, r, g, b);
-  strip.setPixel(2, r, g, b);
-  strip.show();
-}, null);
+/**
+ * Network search function.
+ * Pixel blinks on network discover.
+ * Stop blinking when connected.
+ */
+let timerId;
 
-Timer.set(1000, Timer.REPEAT, function() 
-{
+let netSearch = function() {
+	// Initialize before using.
+	initStrip();
+	// Set timer to change pixel every 500 ms.
+	timerId = Timer.set(
+		500,
+		Timer.REPEAT,
+		function() {
+			pixel = (pixel + 1) % numPixels;
+			setOnePixel(pixel, red);
+		},
+		null
+	);
 
-}, null);
+	// Stop the timer on connection.
+	Event.addHandler(
+		Event.CLOUD_CONNECTED,
+		function() {
+			print('Connected to cloud');
+			Timer.del(timerId);
+			setAllPixels(green);
+		},
+		null
+	);
+};
+
+netSearch();
