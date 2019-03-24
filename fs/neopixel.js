@@ -15,6 +15,39 @@ let red = {r: 200, g: 0, b: 0};
 let green = {r: 0, g: 200, b: 0};
 let blue = {r: 0, g: 0, b: 200};
 
+// Numeric timer ID
+let timerId;
+
+/**
+ * Network search function.
+ * @description Pixel blinks on network discover. Stop blinking when connected.
+ */
+let netSearch = function() {
+	// Initialize before using.
+	initStrip();
+	// Set timer to change pixel every 500 ms.
+	timerId = Timer.set(
+		500,
+		Timer.REPEAT,
+		function() {
+			pixel = (pixel + 1) % numPixels;
+			setOnePixel(pixel, red);
+		},
+		null
+	);
+
+	// Stop the timer on connection.
+	Event.addHandler(
+		Event.CLOUD_CONNECTED,
+		function() {
+			print('Connected to cloud');
+			Timer.del(timerId);
+			setAllPixels(green);
+		},
+		null
+	);
+};
+
 /**
  * Initialize the strip.
  */
@@ -50,38 +83,3 @@ let setAllPixels = function(color) {
 	}
 	strip.show();
 };
-
-/**
- * Network search function.
- * Pixel blinks on network discover.
- * Stop blinking when connected.
- */
-let timerId;
-
-let netSearch = function() {
-	// Initialize before using.
-	initStrip();
-	// Set timer to change pixel every 500 ms.
-	timerId = Timer.set(
-		500,
-		Timer.REPEAT,
-		function() {
-			pixel = (pixel + 1) % numPixels;
-			setOnePixel(pixel, red);
-		},
-		null
-	);
-
-	// Stop the timer on connection.
-	Event.addHandler(
-		Event.CLOUD_CONNECTED,
-		function() {
-			print('Connected to cloud');
-			Timer.del(timerId);
-			setAllPixels(green);
-		},
-		null
-	);
-};
-
-netSearch();
