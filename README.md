@@ -51,32 +51,6 @@ gcloud projects list
 mos gcp-iot-setup --gcp-project PROJECT_ID --gcp-region us-central1 --gcp-registry IOT_REGISTRY_NAME
 ```
 
-# Credentials for testing nodejs server.
-
-- Create service account
-
-```
-gcloud iam service-accounts create ACCOUNT_NAME
-```
-
-- Grant permissions to the service account.
-
-```
-gcloud projects add-iam-policy-binding PROJECT_ID --member "serviceAccount:ACCOUNT_NAME@PROJECT_ID.iam.gserviceaccount.com" --role "roles/owner"
-```
-
-- Create key file. FILE_NAME will be stored.
-
-```
-gcloud iam service-accounts keys create FILE_NAME.json --iam-account ACCOUNT_NAME@PROJECT_ID.iam.gserviceaccount.com
-```
-
-- Set the enviroment variable to use de key (macOs or Linux):
-
-```
-export GOOGLE_APPLICATION_CREDENTIALS="/path/to/file/FILE_NAME.json"
-```
-
 # Commands
 
 Build Firmware locally and flash. Docker must be running.
