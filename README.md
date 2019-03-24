@@ -53,6 +53,15 @@ mos gcp-iot-setup --gcp-project PROJECT_ID --gcp-region us-central1 --gcp-regist
 
 # Commands
 
+Master script for production
+
+```
+mos build --platform esp8266 --local --verbose &&
+mos flash &&
+mos gcp-iot-setup --gcp-project <project-id> --gcp-region us-central1 --gcp-registry <registry-name> &&
+rm gcp* &&
+```
+
 Build Firmware locally and flash. Docker must be running.
 
 ```
