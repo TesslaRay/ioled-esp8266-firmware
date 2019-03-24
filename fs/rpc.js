@@ -7,5 +7,5 @@ load('api_rpc.js');
  * args is an object. Message from MQTT is a string.
  */
 RPC.addHandler('board.update', function(args) {
-  return setBoardConfig(args);
+	return setBoardConfig(args);
 });
