@@ -14,6 +14,8 @@ let blue = {r: 0, g: 0, b: 200};
 
 // Numeric timer ID
 let timerId;
+// The pixel index.
+let pixel = 0;
 
 /**
  * Network search function.
@@ -21,31 +23,29 @@ let timerId;
  * @see https://github.com/mongoose-os-libs/mjs/blob/master/fs/api_events.js
  */
 let netSearch = function() {
-  // The pixel index.
-  let pixel = 0;
-  // Initialize strip.
-  initStrip();
-  // Set timer to change pixel every 500 ms.
-  timerId = Timer.set(
-    500,
-    Timer.REPEAT,
-    function() {
-      pixel = (pixel + 1) % numPixels;
-      setOnePixel(pixel, red);
-    },
-    null
-  );
+	// Initialize strip.
+	initStrip();
+	// Set timer to change pixel every 500 ms.
+	timerId = Timer.set(
+		500,
+		Timer.REPEAT,
+		function() {
+			pixel = (pixel + 1) % numPixels;
+			setOnePixel(pixel, red);
+		},
+		null
+	);
 
-  // Stop the timer on succeed cloud connection.
-  Event.addHandler(
-    Event.CLOUD_CONNECTED,
-    function() {
-      print('Connected to cloud');
-      Timer.del(timerId);
-      setAllPixels(green);
-    },
-    null
-  );
+	// Stop the timer on succeed cloud connection.
+	Event.addHandler(
+		Event.CLOUD_CONNECTED,
+		function() {
+			print('Connected to cloud');
+			Timer.del(timerId);
+			setAllPixels(green);
+		},
+		null
+	);
 };
 
 /**
@@ -53,11 +53,11 @@ let netSearch = function() {
  * @see https://github.com/mongoose-os-libs/neopixel/blob/master/mjs_fs/api_neopixel.js
  */
 let initStrip = function() {
-  strip.clear();
-  strip.setPixel(0, 0, 0, 0);
-  strip.setPixel(1, 0, 0, 0);
-  strip.setPixel(2, 0, 0, 0);
-  strip.show();
+	strip.clear();
+	strip.setPixel(0, 0, 0, 0);
+	strip.setPixel(1, 0, 0, 0);
+	strip.setPixel(2, 0, 0, 0);
+	strip.show();
 };
 
 /**
@@ -66,11 +66,11 @@ let initStrip = function() {
  * @param {{r: number, g: number, b: number}} color RGB color object.
  */
 let setOnePixel = function(index, color) {
-  strip.clear();
-  for (let i = 0; i < numPixels; i++) {
-    index === i ? strip.setPixel(i, color.r, color.g, color.b) : strip.setPixel(i, 0, 0, 0);
-  }
-  strip.show();
+	strip.clear();
+	for (let i = 0; i < numPixels; i++) {
+		index === i ? strip.setPixel(i, color.r, color.g, color.b) : strip.setPixel(i, 0, 0, 0);
+	}
+	strip.show();
 };
 
 /**
@@ -78,9 +78,9 @@ let setOnePixel = function(index, color) {
  * @param {{r: number, g: number, b: number}} color RGB color object.
  */
 let setAllPixels = function(color) {
-  strip.clear();
-  for (let i = 0; i < numPixels; i++) {
-    strip.setPixel(i, color.r, color.g, color.b);
-  }
-  strip.show();
+	strip.clear();
+	for (let i = 0; i < numPixels; i++) {
+		strip.setPixel(i, color.r, color.g, color.b);
+	}
+	strip.show();
 };
